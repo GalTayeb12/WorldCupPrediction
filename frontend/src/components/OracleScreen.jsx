@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SimulatorHero from "./SimulatorHero";
 import Bracket from "./Bracket";
+import MatchExplain from "./MatchExplain";
 import SIMULATION_MOCK from "../mock/simulationMock";
 
 const MODEL_ACCURACY = "54%"; // placeholder — יוחלף כשהמודל החדש מוכן
@@ -45,11 +46,11 @@ function OracleScreen() {
         onMatchClick={setSelectedMatch}
       />
 
-      {/* TODO T1.6 — MatchExplain modal */}
       {selectedMatch && (
-        <p style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>
-          Clicked: {selectedMatch.home} vs {selectedMatch.away} — MatchExplain coming in T1.6
-        </p>
+        <MatchExplain
+          match={selectedMatch}
+          onClose={() => setSelectedMatch(null)}
+        />
       )}
     </div>
   );
