@@ -27,13 +27,13 @@ media/
 
 # ===== React / Node =====
 frontend/node_modules/
+frontend/build/
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 dist/
-build/
 
 # ===== Jupyter (אם יש) =====
 .ipynb_checkpoints/
