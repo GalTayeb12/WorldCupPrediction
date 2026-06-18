@@ -10,6 +10,7 @@ import RegisterForm from "./components/RegisterForm";
 import GroupLeaderboard from "./components/GroupLeaderboard";
 import UserProfile from "./components/UserProfile";
 import { AuthProvider } from "./components/AuthContext";
+import "./styles/App.css";
 
 // פונקציה לרענון טוקן
 const refreshAccessToken = async () => {
@@ -43,32 +44,11 @@ function AppContent({ token, onLogout, onLogin }) {
         element={
           token ? (
             <>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-                <button
-                  onClick={() => navigate("/")}
-                  style={{
-                    padding: "8px 15px",
-                    backgroundColor: "var(--color-primary)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "var(--radius-sm)",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  }}
-                >
+              <div className="app-navbar">
+                <button className="btn btn-primary" onClick={() => navigate("/")}>
                   ← Back to Home
                 </button>
-                <button
-                  onClick={onLogout}
-                  style={{
-                    padding: "8px 15px",
-                    backgroundColor: "var(--color-danger)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
+                <button className="btn btn-danger" onClick={onLogout}>
                   Logout
                 </button>
               </div>
@@ -84,31 +64,11 @@ function AppContent({ token, onLogout, onLogin }) {
         element={
           token ? (
             <>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-                <button
-                  onClick={() => navigate("/profile")}
-                  style={{
-                    padding: "8px 15px",
-                    backgroundColor: "var(--color-primary)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "var(--radius-sm)",
-                    cursor: "pointer",
-                  }}
-                >
+              <div className="app-navbar">
+                <button className="btn btn-primary" onClick={() => navigate("/profile")}>
                   My Profile
                 </button>
-                <button
-                  onClick={onLogout}
-                  style={{
-                    padding: "8px 15px",
-                    backgroundColor: "var(--color-danger)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
+                <button className="btn btn-danger" onClick={onLogout}>
                   Logout
                 </button>
               </div>

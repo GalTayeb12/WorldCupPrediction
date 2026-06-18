@@ -1,0 +1,39 @@
+/* ============================================================
+   App.css — סגנונות לקומפוננטת App (ניווט + כפתורי header)
+   ============================================================ */
+
+/* ---------- Navbar row ---------- */
+.app-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- Base button ---------- */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  transition: filter var(--transition-fast);
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+}
+
+/* ---------- Variants ---------- */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: var(--color-surface);
+}
