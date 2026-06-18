@@ -1,3 +1,4 @@
+import { countryToISO } from "../utils/countryToISO";
 import "../styles/Bracket.css";
 
 // ─── GroupCard ────────────────────────────────────────────────────────────────
@@ -49,6 +50,71 @@ function KnockoutMatch({ match, onClick, isFinal = false }) {
   );
 }
 
+// ─── ChampionCard helpers ─────────────────────────────────────────────────────
+
+const ROUND_SHORT = {
+  round_of_32: "R32",
+  round_of_16: "R16",
+  quarter:     "QF",
+  semi:        "SF",
+  final:       "Final",
+};
+
+/** Trace every match the champion won, return [{round, opponent}] */
+function buildPath(champion, knockout) {
+  return Object.entries(ROUND_SHORT).reduce((path, [key, label]) => {
+    const matches = key === "final" ? [knockout[key]] : (knockout[key] ?? []);
+    const match   = matches.find((m) => m?.winner === champion);
+    if (!match) return path;
+    const opponent = match.winner === match.home ? match.away : match.home;
+    return [...path, { round: label, opponent }];
+  }, []);
+}
+
+// ─── ChampionCard ─────────────────────────────────────────────────────────────
+
+function ChampionCard({ champion, winProbability, knockout }) {
+  const iso  = countryToISO(champion);
+  const path = buildPath(champion, knockout);
+
+  return (
+    <div className="champion-col">
+      <div className="champion-col__label">🏆 Champion</div>
+
+      <div className="champion-col__body">
+        <div className="champion-card">
+          <span className="champion-card__trophy" aria-hidden="true">🏆</span>
+
+          {iso
+            ? <span className={`fi fi-${iso}`} role="img" aria-label={champion} />
+            : <span className="champion-card__flag-placeholder" />
+          }
+
+          <span className="champion-card__name">{champion}</span>
+          <span className="champion-card__subtitle">Predicted Champion</span>
+
+          <span className="champion-card__prob">{winProbability} to win</span>
+
+          {path.length > 0 && (
+            <>
+              <hr className="champion-card__divider" />
+              <span className="champion-card__path-title">Path to the title</span>
+              <ol className="champion-card__path">
+                {path.map(({ round, opponent }) => (
+                  <li key={round} className="champion-card__path-row">
+                    <span className="champion-card__path-round">{round}</span>
+                    <span className="champion-card__path-opponent">def. {opponent}</span>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Bracket ──────────────────────────────────────────────────────────────────
 
 const ROUND_LABELS = {
@@ -64,11 +130,13 @@ const ROUND_ORDER = ["round_of_32", "round_of_16", "quarter", "semi", "final"];
 /**
  * Bracket
  * Props:
- *   groups    {Array}    — 12 group objects from /api/simulate/
- *   knockout  {Object}   — { round_of_32, round_of_16, quarter, semi, third_place, final }
- *   onMatchClick {Function} — called with match object when a KnockoutMatch is clicked
+ *   groups        {Array}    — 12 group objects from /api/simulate/
+ *   knockout      {Object}   — { round_of_32, round_of_16, quarter, semi, third_place, final }
+ *   champion      {string}   — champion team name
+ *   winProbability{string}   — e.g. "18%"
+ *   onMatchClick  {Function} — called with match object on KnockoutMatch click
  */
-function Bracket({ groups, knockout, onMatchClick }) {
+function Bracket({ groups, knockout, champion, winProbability, onMatchClick }) {
   if (!groups || !knockout) return null;
 
   return (
@@ -87,8 +155,6 @@ function Bracket({ groups, knockout, onMatchClick }) {
         <div className="knockout-rounds">
           {ROUND_ORDER.map((roundKey) => {
             const isFinalRound = roundKey === "final";
-
-            // Normalise: "final" in API is a single object, others are arrays
             const matches = isFinalRound
               ? [knockout[roundKey]]
               : knockout[roundKey];
@@ -111,6 +177,15 @@ function Bracket({ groups, knockout, onMatchClick }) {
               </div>
             );
           })}
+
+          {/* ── Champion card — 6th column ─────────────────── */}
+          {champion && (
+            <ChampionCard
+              champion={champion}
+              winProbability={winProbability}
+              knockout={knockout}
+            />
+          )}
         </div>
       </div>
     </div>

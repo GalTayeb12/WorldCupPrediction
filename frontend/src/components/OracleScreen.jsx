@@ -43,6 +43,8 @@ function OracleScreen() {
       <Bracket
         groups={simulation?.groups}
         knockout={simulation?.knockout}
+        champion={champion}
+        winProbability={winProbability}
         onMatchClick={setSelectedMatch}
       />
 
