@@ -48,10 +48,10 @@ function AppContent({ token, onLogout, onLogin }) {
                   onClick={() => navigate("/")}
                   style={{
                     padding: "8px 15px",
-                    backgroundColor: "#007bff",
+                    backgroundColor: "var(--color-primary)",
                     color: "white",
                     border: "none",
-                    borderRadius: "4px",
+                    borderRadius: "var(--radius-sm)",
                     cursor: "pointer",
                     marginRight: "10px"
                   }}
@@ -62,7 +62,7 @@ function AppContent({ token, onLogout, onLogin }) {
                   onClick={onLogout}
                   style={{
                     padding: "8px 15px",
-                    backgroundColor: "#dc3545",
+                    backgroundColor: "var(--color-danger)",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
@@ -89,10 +89,10 @@ function AppContent({ token, onLogout, onLogin }) {
                   onClick={() => navigate("/profile")}
                   style={{
                     padding: "8px 15px",
-                    backgroundColor: "#007bff",
+                    backgroundColor: "var(--color-primary)",
                     color: "white",
                     border: "none",
-                    borderRadius: "4px",
+                    borderRadius: "var(--radius-sm)",
                     cursor: "pointer",
                   }}
                 >
@@ -102,7 +102,7 @@ function AppContent({ token, onLogout, onLogin }) {
                   onClick={onLogout}
                   style={{
                     padding: "8px 15px",
-                    backgroundColor: "#dc3545",
+                    backgroundColor: "var(--color-danger)",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
