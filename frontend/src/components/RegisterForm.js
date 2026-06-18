@@ -1,17 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "../styles/AuthForms.css";
 
 function RegisterForm() {
-  const [username, setUsername] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username,        setUsername]        = useState("");
+  const [fullName,        setFullName]        = useState("");
+  const [email,           setEmail]           = useState("");
+  const [password,        setPassword]        = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [favoriteTeam, setFavoriteTeam] = useState("");
-  const [groupName, setGroupName] = useState("");
-  const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [favoriteTeam,    setFavoriteTeam]    = useState("");
+  const [error,           setError]           = useState("");
+  const [loading,         setLoading]         = useState(false);
+  const [showSuccess,     setShowSuccess]     = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,82 +22,126 @@ function RegisterForm() {
     setShowSuccess(false);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
+    setLoading(true);
     try {
       await axios.post("http://localhost:8000/api/register/", {
         username,
         password,
         email,
-        full_name: fullName,
+        full_name:     fullName,
         favorite_team: favoriteTeam,
-        group_name: groupName,
+        // group_name removed (CHANGES_v3)
       });
 
-      setShowSuccess(true); // ✨ הצג הודעה זמנית
+      setShowSuccess(true);
       setTimeout(() => {
-        navigate("/login");
-      }, 2000); // אחרי 2 שניות עבור למסך התחברות
+        navigate("/login", {
+          state: { successMessage: "Registration successful! Please sign in." },
+        });
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || "Registration failed");
+      const data = err.response?.data;
+      // DRF returns field errors as arrays; flatten to a readable string
+      if (data && typeof data === "object") {
+        const messages = Object.entries(data)
+          .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(" ") : msgs}`)
+          .join(" · ");
+        setError(messages);
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{
-      padding: "30px",
-      maxWidth: "450px",
-      margin: "50px auto",
-      background: "#f9f9f9",
-      borderRadius: "12px",
-      boxShadow: "0 0 10px rgba(0,0,0,0.1)"
-    }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>Register</h2>
+    <div className="auth-page">
+      <div className="auth-card">
 
-      {showSuccess && (
-        <div style={{
-          backgroundColor: "#d4edda",
-          color: "#155724",
-          padding: "10px",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          textAlign: "center",
-          fontWeight: "bold",
-          boxShadow: "0 0 5px rgba(0,0,0,0.1)"
-        }}>
-          🎉 Registration successful! Redirecting...
+        {/* Header */}
+        <div className="auth-header">
+          <div className="auth-icon" aria-hidden="true">⚽</div>
+          <h1 className="auth-title">Create account</h1>
+          <p className="auth-subtitle">Join World Cup Oracle and track your predictions</p>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit}>
-        <input className="form-input" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <input className="form-input" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
-        <input className="form-input" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input className="form-input" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <input className="form-input" placeholder="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-        <input className="form-input" placeholder="Favorite Team" value={favoriteTeam} onChange={(e) => setFavoriteTeam(e.target.value)} />
-        <input className="form-input" placeholder="Group" value={groupName} onChange={(e) => setGroupName(e.target.value)} required />
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            fontWeight: "bold",
-            fontSize: "16px",
-            marginTop: "10px",
-            cursor: "pointer"
-          }}
-        >
-          Register
-        </button>
-      </form>
-      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+        {showSuccess && (
+          <div className="auth-success">🎉 Registration successful! Redirecting…</div>
+        )}
+
+        {/* Form */}
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          <input
+            className="form-input"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            required
+          />
+          <input
+            className="form-input"
+            placeholder="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            autoComplete="name"
+            required
+          />
+          <input
+            className="form-input"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+          <input
+            className="form-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          <input
+            className="form-input"
+            type="password"
+            placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          <input
+            className="form-input"
+            placeholder="Favorite team (optional)"
+            value={favoriteTeam}
+            onChange={(e) => setFavoriteTeam(e.target.value)}
+          />
+
+          <button className="auth-submit" type="submit" disabled={loading || showSuccess}>
+            {loading ? "Creating account…" : "Create account"}
+          </button>
+        </form>
+
+        {error && <p className="auth-error">{error}</p>}
+
+        {/* Footer */}
+        <p className="auth-footer">
+          Already have an account?{" "}
+          <button className="auth-link-btn" onClick={() => navigate("/login")}>
+            Sign in
+          </button>
+        </p>
+
+      </div>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import "../styles/AuthForms.css";
 
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,6 +16,7 @@ function LoginForm({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await axios.post("http://localhost:8000/api/login/", {
@@ -21,104 +24,76 @@ function LoginForm({ onLogin }) {
         password,
       });
 
-      const access = response.data.access;
-      const refresh = response.data.refresh;
-
+      const { access, refresh } = response.data;
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
 
       onLogin(access);
       navigate("/");
     } catch (err) {
-      console.error("❌ Login error:", err.response?.data || err.message);
-      if (err.response?.status === 401) {
-        setError("Invalid username or password");
-      } else {
-        setError("Login failed. Please try again.");
-      }
+      console.error("Login error:", err.response?.data || err.message);
+      setError(
+        err.response?.status === 401
+          ? "Invalid username or password."
+          : "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{
-      padding: "30px",
-      maxWidth: "400px",
-      margin: "50px auto",
-      background: "#f9f9f9",
-      borderRadius: "12px",
-      boxShadow: "0 0 10px rgba(0,0,0,0.1)"
-    }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>Login</h2>
+    <div className="auth-page">
+      <div className="auth-card">
 
-      {successMessage && (
-        <div style={{
-          backgroundColor: "#d4edda",
-          color: "#155724",
-          padding: "10px",
-          borderRadius: "6px",
-          marginBottom: "15px",
-          textAlign: "center",
-          fontWeight: "bold",
-          boxShadow: "0 0 5px rgba(0,0,0,0.1)"
-        }}>
-          🎉 Registration successful! Please log in.
+        {/* Header */}
+        <div className="auth-header">
+          <div className="auth-icon" aria-hidden="true">🏆</div>
+          <h1 className="auth-title">Welcome back</h1>
+          <p className="auth-subtitle">Sign in to access World Cup Oracle</p>
         </div>
-      )}
 
-      <form onSubmit={handleLogin}>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          className="form-input"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            fontWeight: "bold",
-            fontSize: "16px",
-            marginTop: "10px",
-            cursor: "pointer"
-          }}
-        >
-          Login
-        </button>
-      </form>
+        {/* Post-registration success */}
+        {successMessage && (
+          <div className="auth-success">🎉 {successMessage}</div>
+        )}
 
-      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+        {/* Form */}
+        <form className="auth-form" onSubmit={handleLogin} noValidate>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            required
+          />
+          <input
+            className="form-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+          <button className="auth-submit" type="submit" disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
 
-      <p style={{ marginTop: "15px", textAlign: "center" }}>
-        Don't have an account?{" "}
-        <button
-          onClick={() => navigate("/register")}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#007bff",
-            textDecoration: "underline",
-            cursor: "pointer",
-            padding: 0,
-          }}
-        >
-          Register here
-        </button>
-      </p>
+        {error && <p className="auth-error">{error}</p>}
+
+        {/* Footer */}
+        <p className="auth-footer">
+          Don&apos;t have an account?{" "}
+          <button className="auth-link-btn" onClick={() => navigate("/register")}>
+            Create one
+          </button>
+        </p>
+
+      </div>
     </div>
   );
 }
