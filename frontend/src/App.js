@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import OracleScreen from "./components/OracleScreen";
 import PredictionForm from "./components/PredictionForm";
 import Leaderboard from "./components/Leaderboard";
 import PredictionTable from "./components/PredictionTable";
@@ -21,7 +22,6 @@ const refreshAccessToken = async () => {
     const response = await axios.post("http://localhost:8000/api/refresh/", {
       refresh: refreshToken,
     });
-
     const newAccessToken = response.data.access;
     localStorage.setItem("access_token", newAccessToken);
     return newAccessToken;
@@ -32,13 +32,16 @@ const refreshAccessToken = async () => {
 };
 
 function AppContent({ token, onLogout, onLogin }) {
-  const [refreshFlag, setRefreshFlag] = useState(false);
   const navigate = useNavigate();
 
   return (
     <Routes>
+      {/* ---- ציבורי ---- */}
+      <Route path="/" element={<OracleScreen />} />
       <Route path="/login" element={<LoginForm onLogin={onLogin} />} />
       <Route path="/register" element={<RegisterForm />} />
+
+      {/* ---- דורש התחברות ---- */}
       <Route
         path="/profile"
         element={
@@ -59,33 +62,8 @@ function AppContent({ token, onLogout, onLogin }) {
           )
         }
       />
-      <Route
-        path="/"
-        element={
-          token ? (
-            <>
-              <div className="app-navbar">
-                <button className="btn btn-primary" onClick={() => navigate("/profile")}>
-                  My Profile
-                </button>
-                <button className="btn btn-danger" onClick={onLogout}>
-                  Logout
-                </button>
-              </div>
 
-              <PredictionForm token={token} onPredictionSaved={() => setRefreshFlag((prev) => !prev)} />
-              <hr />
-              <Leaderboard refreshFlag={refreshFlag} />
-              <hr />
-              <GroupLeaderboard />
-              <hr />
-              <PredictionTable token={token} refreshFlag={refreshFlag} />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
+      {/* TODO CHANGES_v3 — /predict → SingleMatchPredict (T-future) */}
     </Routes>
   );
 }
@@ -95,11 +73,11 @@ function App() {
 
   useEffect(() => {
     const checkToken = async () => {
-      let access = localStorage.getItem("access_token");
-
+      const access = localStorage.getItem("access_token");
+      if (!access) return;
       try {
         await axios.get("http://localhost:8000/api/user/profile/", {
-          headers: { Authorization: `Bearer ${access}` }
+          headers: { Authorization: `Bearer ${access}` },
         });
         setToken(access);
       } catch (err) {
@@ -115,7 +93,6 @@ function App() {
         }
       }
     };
-
     checkToken();
   }, []);
 
@@ -134,7 +111,6 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="container">
-          <h1>World Cup AI Simulator</h1>
           <AppContent token={token} onLogin={handleLogin} onLogout={handleLogout} />
         </div>
       </Router>
