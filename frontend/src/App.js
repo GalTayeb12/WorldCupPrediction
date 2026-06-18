@@ -37,9 +37,30 @@ function AppContent({ token, onLogout, onLogin }) {
   return (
     <Routes>
       {/* ---- ציבורי ---- */}
-      <Route path="/" element={<OracleScreen />} />
       <Route path="/login" element={<LoginForm onLogin={onLogin} />} />
       <Route path="/register" element={<RegisterForm />} />
+
+      {/* ---- דורש התחברות ---- */}
+      <Route
+        path="/"
+        element={
+          token ? (
+            <>
+              <div className="app-navbar">
+                <button className="btn btn-primary" onClick={() => navigate("/profile")}>
+                  My Profile
+                </button>
+                <button className="btn btn-danger" onClick={onLogout}>
+                  Logout
+                </button>
+              </div>
+              <OracleScreen />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
 
       {/* ---- דורש התחברות ---- */}
       <Route
