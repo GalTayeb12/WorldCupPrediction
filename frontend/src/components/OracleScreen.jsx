@@ -1,36 +1,29 @@
 import { useState } from "react";
 import SimulatorHero from "./SimulatorHero";
+import Bracket from "./Bracket";
+import SIMULATION_MOCK from "../mock/simulationMock";
 
-// ---------------------------------------------------------------------------
-// Mock data — מחליף את /api/simulate/ עד שה-endpoint מוכן (T3.1)
-// ---------------------------------------------------------------------------
-const MOCK_RESULT = {
-  champion: { team: "France", win_probability: 0.18 },
-  // TODO: groups, knockout יתווספו ב-T1.5 (Bracket)
-};
-
-const MODEL_ACCURACY = "54%"; // placeholder עד שהמודל החדש מוכן
-
-// ---------------------------------------------------------------------------
+const MODEL_ACCURACY = "54%"; // placeholder — יוחלף כשהמודל החדש מוכן
 
 function OracleScreen() {
-  const [simulation, setSimulation] = useState(null);
-  const [loading, setLoading]       = useState(false);
-  const [error, setError]           = useState(null);
-  // selectedMatch יתווסף ב-T1.6 (MatchExplain)
+  const [simulation, setSimulation]       = useState(null);
+  const [loading, setLoading]             = useState(false);
+  const [error, setError]                 = useState(null);
+  const [selectedMatch, setSelectedMatch] = useState(null); // T1.6 — MatchExplain
 
   const runSimulation = async () => {
     setLoading(true);
     setError(null);
+    setSelectedMatch(null);
 
     // TODO T3.1 — החלף ב-POST /api/simulate/ אמיתי
-    await new Promise((res) => setTimeout(res, 1400)); // מדמה latency
-    setSimulation(MOCK_RESULT);
+    await new Promise((res) => setTimeout(res, 1400));
+    setSimulation(SIMULATION_MOCK);
 
     setLoading(false);
   };
 
-  const champion      = simulation?.champion?.team ?? null;
+  const champion       = simulation?.champion?.team ?? null;
   const winProbability = simulation?.champion?.win_probability
     ? `${Math.round(simulation.champion.win_probability * 100)}%`
     : null;
@@ -45,8 +38,19 @@ function OracleScreen() {
         error={error}
         onRun={runSimulation}
       />
-      {/* TODO T1.5 — <Bracket groups={simulation?.groups} knockout={simulation?.knockout} /> */}
-      {/* TODO T1.6 — <MatchExplain match={selectedMatch} onClose={() => setSelectedMatch(null)} /> */}
+
+      <Bracket
+        groups={simulation?.groups}
+        knockout={simulation?.knockout}
+        onMatchClick={setSelectedMatch}
+      />
+
+      {/* TODO T1.6 — MatchExplain modal */}
+      {selectedMatch && (
+        <p style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>
+          Clicked: {selectedMatch.home} vs {selectedMatch.away} — MatchExplain coming in T1.6
+        </p>
+      )}
     </div>
   );
 }

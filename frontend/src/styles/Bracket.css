@@ -1,0 +1,240 @@
+/* ============================================================
+   Bracket.css — Group stage + knockout bracket
+   ============================================================ */
+
+/* ── Section titles ────────────────────────────────────────── */
+.bracket__section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  text-align: center;
+  margin: var(--space-6) 0 var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ════════════════════════════════════════════════════════════
+   GROUP STAGE
+   ════════════════════════════════════════════════════════════ */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 1100px) { .groups-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px)  { .groups-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .groups-grid { grid-template-columns: 1fr; } }
+
+/* ── GroupCard ─────────────────────────────────────────────── */
+.group-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.group-card__header {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--space-2) var(--space-3);
+}
+
+.group-card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  position: relative;
+}
+
+.group-card__row:last-child { border-bottom: none; }
+
+/* Left accent bar */
+.group-card__row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+}
+
+.group-card__row--winner    { background: var(--color-primary-light); }
+.group-card__row--winner::before    { background: var(--color-primary); }
+.group-card__row--runner_up { background: color-mix(in srgb, var(--color-primary-light) 55%, white); }
+.group-card__row--runner_up::before { background: var(--color-primary); opacity: 0.5; }
+.group-card__row--best_third { background: var(--color-gold-light); }
+.group-card__row--best_third::before { background: var(--color-gold); }
+.group-card__row--eliminated { opacity: 0.45; }
+
+.group-card__rank {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.group-card__name {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.group-card__pts {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.group-card__badge {
+  font-size: 9px;
+  font-weight: var(--font-weight-semibold);
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.group-card__badge--q   { background: var(--color-primary); color: #fff; }
+.group-card__badge--b3  { background: var(--color-gold);    color: #fff; }
+
+/* ════════════════════════════════════════════════════════════
+   KNOCKOUT BRACKET
+   ════════════════════════════════════════════════════════════ */
+
+/*
+  Bracket alignment strategy:
+  All round columns share the same fixed height (--bh).
+  Each column uses justify-content: space-evenly so:
+    R32 (16 matches) → each slot = --bh / 16
+    R16  (8 matches) → each slot = --bh / 8  = 2× R32  ✓
+    QF   (4 matches) → each slot = --bh / 4  = 4× R32  ✓
+    SF   (2 matches) → each slot = --bh / 2  = 8× R32  ✓
+    Final (1 match)  → centred                          ✓
+*/
+:root { --bh: 1280px; }
+
+.knockout-scroll {
+  overflow-x: auto;
+  padding-bottom: var(--space-5);
+}
+
+.knockout-rounds {
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+  min-width: max-content;
+}
+
+.knockout-round {
+  display: flex;
+  flex-direction: column;
+  width: 172px;
+  flex-shrink: 0;
+}
+
+.round-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  text-align: center;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+}
+
+.round-matches {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: var(--bh);
+}
+
+/* ── KnockoutMatch ─────────────────────────────────────────── */
+.k-match {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.k-match:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
+}
+
+/* Gold border for the Final */
+.k-match--final {
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 0 0 1px var(--color-gold-light), var(--shadow-md);
+}
+
+.k-match--final:hover {
+  box-shadow: 0 0 0 1px var(--color-gold-light), var(--shadow-lg);
+  border-color: var(--color-gold);
+}
+
+/* ── Team row inside a match ───────────────────────────────── */
+.k-team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px var(--space-2);
+  font-size: var(--text-xs);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.k-team:last-child { border-bottom: none; }
+
+.k-team--winner {
+  background: var(--color-primary-light);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.k-team--loser {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.k-team__name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.k-team__prob {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.k-team--winner .k-team__prob {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Final team rows slightly taller */
+.k-match--final .k-team {
+  padding: 7px var(--space-3);
+  font-size: var(--text-sm);
+}
