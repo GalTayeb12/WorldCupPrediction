@@ -1,21 +1,26 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (
     predict_result,
     save_prediction,
     user_predictions,
     RegisterView,
+    LoginView,
     list_users,
     get_users,
     user_profile,
     simulate_tournament_view,
+    health_check,
 )
 
 urlpatterns = [
     # Auth
-    path('login/',   TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/', TokenRefreshView.as_view(),    name='token_refresh'),
-    path('register/', RegisterView.as_view(),       name='register'),
+    path('login/',    LoginView.as_view(),    name='token_obtain_pair'),
+    path('refresh/',  TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', RegisterView.as_view(), name='register'),
+
+    # Health
+    path('health/',   health_check,           name='health'),
 
     # Simulation (requires auth)
     path('simulate/',        simulate_tournament_view, name='simulate'),

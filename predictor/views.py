@@ -1,15 +1,20 @@
 import os
 import pickle
+import logging
+import traceback
 import joblib
 import numpy as np
 import xgboost as xgb
 import pandas as pd
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+logger = logging.getLogger(__name__)
 
 from .models import UserPrediction, UserProfile
 from .serializers import RegisterSerializer
@@ -179,6 +184,40 @@ def run_model(features):
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            logger.error("Error in RegisterView:\n%s", traceback.format_exc())
+            return Response({"error": str(e)}, status=500)
+
+
+class LoginView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except Exception as e:
+            logger.error("Error in LoginView:\n%s", traceback.format_exc())
+            return Response({"error": str(e)}, status=500)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check(request):
+    """Quick endpoint to verify DB connectivity and model status."""
+    from django.db import connection
+    result = {"status": "ok", "model_loaded": _new_model is not None}
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        result["db"] = "ok"
+    except Exception as e:
+        result["db"] = f"ERROR: {e}"
+        result["status"] = "degraded"
+    if _MODEL_LOAD_ERROR:
+        result["model_error"] = _MODEL_LOAD_ERROR
+    return Response(result)
 
 
 # ── Predict (requires auth per CHANGES_v3) ────────────────────────────────────
