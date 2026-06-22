@@ -207,7 +207,13 @@ class LoginView(TokenObtainPairView):
 def health_check(request):
     """Quick endpoint to verify DB connectivity and model status."""
     from django.db import connection
-    result = {"status": "ok", "model_loaded": _new_model is not None}
+    result = {
+        "status": "ok",
+        "model_loaded":    _new_model is not None,
+        "rankings_loaded": rankings_df is not None,
+        "le_loaded":       _new_le is not None,
+        "ratings_loaded":  _final_ratings is not None,
+    }
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
@@ -217,6 +223,7 @@ def health_check(request):
         result["status"] = "degraded"
     if _MODEL_LOAD_ERROR:
         result["model_error"] = _MODEL_LOAD_ERROR
+        result["status"] = "degraded"
     return Response(result)
 
 
@@ -427,9 +434,9 @@ def simulate_tournament_view(request):
     whose champion is in the Top-7 by championship probability, and returns
     that bracket together with the true MC championship odds.
     """
-    if _new_model is None:
+    if _new_model is None or rankings_df is None or _new_le is None or _final_ratings is None:
         return Response(
-            {'error': f'ML model unavailable: {_MODEL_LOAD_ERROR}'},
+            {'error': f'ML model or data not fully loaded. Load error: {_MODEL_LOAD_ERROR}'},
             status=503,
         )
 
