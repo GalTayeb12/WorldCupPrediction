@@ -25,7 +25,7 @@ function OracleScreen() {
     try {
       const token    = localStorage.getItem("access_token");
       const response = await axios.post(
-        `${API_URL}/api/simulate/`,
+        API_URL + "/api/simulate/",
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );

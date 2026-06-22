@@ -28,19 +28,19 @@ function UserProfile({ token }) {
 
     // Profile
     axios
-      .get(`${API_URL}/api/user/profile/`, { headers })
+      .get(API_URL + "/api/user/profile/", { headers })
       .then((r) => setProfile(r.data))
       .catch(() => setError("Failed to load profile."));
 
     // Prediction history
     axios
-      .get(`${API_URL}/api/my_predictions/`, { headers })
+      .get(API_URL + "/api/my_predictions/", { headers })
       .then((r) => setPredictions(r.data))
       .catch(() => setHistError(true));
 
     // Personal stats vs AI
     axios
-      .get(`${API_URL}/api/user-stats/`, { headers })
+      .get(API_URL + "/api/user-stats/", { headers })
       .then((r) => setStats(r.data))
       .catch(() => {}); // endpoint may not exist yet — fail silently
   }, [token]);

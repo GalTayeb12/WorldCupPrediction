@@ -17,7 +17,7 @@ const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) return null;
   try {
-    const response = await axios.post(`${API_URL}/api/refresh/`, {
+    const response = await axios.post(API_URL + "/api/refresh/", {
       refresh: refreshToken,
     });
     const newToken = response.data.access;
@@ -87,8 +87,8 @@ function App() {
       const access = localStorage.getItem("access_token");
       if (!access) return;
       try {
-        await axios.get(`${API_URL}/api/user/profile/`, {
-          headers: { Authorization: `Bearer ${access}` },
+        await axios.get(API_URL + "/api/user/profile/", {
+          headers: { Authorization: "Bearer " + access },
         });
         setToken(access);
       } catch (err) {

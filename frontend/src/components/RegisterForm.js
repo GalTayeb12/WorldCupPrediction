@@ -29,7 +29,7 @@ function RegisterForm() {
 
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/api/register/`, {
+      await axios.post(API_URL + "/api/register/", {
         username,
         password,
         email,

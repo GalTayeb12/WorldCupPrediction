@@ -7,7 +7,7 @@ function UsersTable({ token }) {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/users/`, {
+      .get(API_URL + "/api/users/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

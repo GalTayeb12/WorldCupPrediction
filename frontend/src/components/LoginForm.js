@@ -20,7 +20,7 @@ function LoginForm({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/api/login/`, {
+      const response = await axios.post(API_URL + "/api/login/", {
         username,
         password,
       });

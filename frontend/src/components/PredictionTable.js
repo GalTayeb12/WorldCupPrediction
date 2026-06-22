@@ -8,7 +8,7 @@ function PredictionTable({ token, refreshFlag }) {
   useEffect(() => {
     const fetchPredictions = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/my_predictions/`, {
+        const response = await axios.get(API_URL + "/api/my_predictions/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
