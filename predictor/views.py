@@ -444,7 +444,7 @@ def simulate_tournament_view(request):
         logger.info("Starting simulation (n=50)...")
         result, championship_odds = simulate_and_pick(
             _new_model, _new_le, _final_ratings, _new_feature_names,
-            rankings_df, n=50, top_k=7,
+            rankings_df, n=100, top_k=7,
         )
         result['championship_odds'] = championship_odds
         logger.info("Simulation complete.")
