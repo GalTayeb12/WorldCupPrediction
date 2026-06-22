@@ -2,21 +2,61 @@
    AuthForms.css — LoginForm + RegisterForm shared styles
    ============================================================ */
 
-/* ── Page wrapper ──────────────────────────────────────────── */
+/* ── Page wrapper: column = hero strip on top + card centred below ── */
 .auth-page {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+/* ── Hero strip ─────────────────────────────────────────────── */
+.auth-hero {
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  padding: var(--space-7) var(--space-5) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.auth-hero__icon {
+  font-size: 44px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
+}
+
+.auth-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.auth-hero__sub {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+/* ── Card wrapper: take remaining height, centre the card ────── */
+.auth-card-wrap {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-5);
-  background: var(--color-bg);
+  padding: var(--space-7) var(--space-5);
 }
 
 /* ── Card ──────────────────────────────────────────────────── */
 .auth-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   padding: var(--space-7) var(--space-6);
   width: 100%;
@@ -26,7 +66,7 @@
   gap: var(--space-4);
 }
 
-/* ── Header: icon + title + subtitle ──────────────────────── */
+/* ── Card header: icon + title + subtitle ──────────────────── */
 .auth-header {
   display: flex;
   flex-direction: column;
@@ -54,6 +94,7 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
   margin: 0;
+  text-align: center;
 }
 
 .auth-subtitle {
@@ -69,7 +110,6 @@
   gap: var(--space-3);
 }
 
-/* Override global form-input to use tokens */
 .auth-form .form-input {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -79,7 +119,9 @@
   color: var(--color-text);
   background: var(--color-surface);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  margin-bottom: 0;   /* reset global margin */
+  margin-bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .auth-form .form-input:focus {
@@ -91,7 +133,7 @@
 /* ── Submit button ─────────────────────────────────────────── */
 .auth-submit {
   width: 100%;
-  padding: 11px;
+  padding: 12px;
   background-color: var(--color-primary);
   color: var(--color-surface);
   border: none;
@@ -114,7 +156,7 @@
   cursor: not-allowed;
 }
 
-/* ── Success banner ────────────────────────────────────────── */
+/* ── Messages ──────────────────────────────────────────────── */
 .auth-success {
   background: var(--color-primary-light);
   border-left: 3px solid var(--color-primary);
@@ -125,14 +167,33 @@
   color: var(--color-primary);
 }
 
-/* ── Error message ─────────────────────────────────────────── */
 .auth-error {
   font-size: var(--text-sm);
   color: var(--color-danger);
   text-align: center;
 }
 
-/* ── Footer (link to other form) ───────────────────────────── */
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .auth-hero {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+
+  .auth-hero__title {
+    font-size: clamp(1.4rem, 5vw, var(--text-2xl));
+  }
+
+  .auth-card-wrap {
+    padding: var(--space-4) var(--space-3);
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* ── Footer link ───────────────────────────────────────────── */
 .auth-footer {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
@@ -154,4 +215,5 @@
 
 .auth-link-btn:hover {
   color: var(--color-primary-dark);
+  filter: none;
 }

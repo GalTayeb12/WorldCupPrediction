@@ -1,94 +1,83 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 
-import OracleScreen from "./components/OracleScreen";
-import PredictionForm from "./components/PredictionForm";
-import Leaderboard from "./components/Leaderboard";
-import PredictionTable from "./components/PredictionTable";
-import LoginForm from "./components/LoginForm";
+import HomePage    from "./components/HomePage";
+import LoginForm    from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import GroupLeaderboard from "./components/GroupLeaderboard";
-import UserProfile from "./components/UserProfile";
+import UserProfile  from "./components/UserProfile";
+import AboutModel   from "./components/AboutModel";
+import Navbar       from "./components/Navbar";
 import { AuthProvider } from "./components/AuthContext";
 import "./styles/App.css";
 
-// פונקציה לרענון טוקן
+// ── Token refresh ─────────────────────────────────────────────────────────────
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) return null;
-
   try {
     const response = await axios.post("http://localhost:8000/api/refresh/", {
       refresh: refreshToken,
     });
-    const newAccessToken = response.data.access;
-    localStorage.setItem("access_token", newAccessToken);
-    return newAccessToken;
-  } catch (err) {
-    console.error("🔁 Token refresh failed", err);
+    const newToken = response.data.access;
+    localStorage.setItem("access_token", newToken);
+    return newToken;
+  } catch {
     return null;
   }
 };
 
-function AppContent({ token, onLogout, onLogin }) {
-  const navigate = useNavigate();
+// ── Authenticated layout (navbar + page) ──────────────────────────────────────
+function AuthLayout({ onLogout, children }) {
+  return (
+    <>
+      <Navbar onLogout={onLogout} />
+      <main className="page-content">{children}</main>
+    </>
+  );
+}
 
+// ── Route tree ────────────────────────────────────────────────────────────────
+function AppContent({ token, onLogin, onLogout }) {
   return (
     <Routes>
-      {/* ---- ציבורי ---- */}
-      <Route path="/login" element={<LoginForm onLogin={onLogin} />} />
+      {/* Public */}
+      <Route path="/login"    element={<LoginForm onLogin={onLogin} />} />
       <Route path="/register" element={<RegisterForm />} />
+      <Route path="/about"    element={<AboutModel />} />
 
-      {/* ---- דורש התחברות ---- */}
+      {/* Protected — main */}
       <Route
         path="/"
         element={
           token ? (
-            <>
-              <div className="app-navbar">
-                <button className="btn btn-primary" onClick={() => navigate("/profile")}>
-                  My Profile
-                </button>
-                <button className="btn btn-danger" onClick={onLogout}>
-                  Logout
-                </button>
-              </div>
-              <OracleScreen />
-            </>
+            <AuthLayout onLogout={onLogout}>
+              <HomePage />
+            </AuthLayout>
           ) : (
             <Navigate to="/login" />
           )
         }
       />
 
-      {/* ---- דורש התחברות ---- */}
+      {/* Protected — profile */}
       <Route
         path="/profile"
         element={
           token ? (
-            <>
-              <div className="app-navbar">
-                <button className="btn btn-primary" onClick={() => navigate("/")}>
-                  ← Back to Home
-                </button>
-                <button className="btn btn-danger" onClick={onLogout}>
-                  Logout
-                </button>
-              </div>
+            <AuthLayout onLogout={onLogout}>
               <UserProfile token={token} />
-            </>
+            </AuthLayout>
           ) : (
             <Navigate to="/login" />
           )
         }
       />
-
-      {/* TODO CHANGES_v3 — /predict → SingleMatchPredict (T-future) */}
     </Routes>
   );
 }
 
+// ── Root ──────────────────────────────────────────────────────────────────────
 function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token") || null);
 
@@ -131,9 +120,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="container">
-          <AppContent token={token} onLogin={handleLogin} onLogout={handleLogout} />
-        </div>
+        <AppContent token={token} onLogin={handleLogin} onLogout={handleLogout} />
       </Router>
     </AuthProvider>
   );

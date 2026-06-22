@@ -8,6 +8,7 @@ from .views import (
     list_users,
     get_users,
     user_profile,
+    simulate_tournament_view,
 )
 
 urlpatterns = [
@@ -15,6 +16,9 @@ urlpatterns = [
     path('login/',   TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(),    name='token_refresh'),
     path('register/', RegisterView.as_view(),       name='register'),
+
+    # Simulation (requires auth)
+    path('simulate/',        simulate_tournament_view, name='simulate'),
 
     # Prediction (requires auth)
     path('predict/',         predict_result,  name='predict'),

@@ -44,6 +44,16 @@ function LoginForm({ onLogin }) {
 
   return (
     <div className="auth-page">
+
+      {/* ── Branding hero ── */}
+      <div className="auth-hero">
+        <div className="auth-hero__icon" aria-hidden="true">⚽</div>
+        <h1 className="auth-hero__title">World Cup 2026 · AI Predictor</h1>
+        <p className="auth-hero__sub">Predict the future of the beautiful game</p>
+      </div>
+
+      {/* ── Form card ── */}
+      <div className="auth-card-wrap">
       <div className="auth-card">
 
         {/* Header */}
@@ -94,6 +104,7 @@ function LoginForm({ onLogin }) {
         </p>
 
       </div>
+      </div>  {/* auth-card-wrap */}
     </div>
   );
 }

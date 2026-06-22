@@ -61,6 +61,16 @@ function RegisterForm() {
 
   return (
     <div className="auth-page">
+
+      {/* ── Branding hero ── */}
+      <div className="auth-hero">
+        <div className="auth-hero__icon" aria-hidden="true">⚽</div>
+        <h1 className="auth-hero__title">World Cup 2026 · AI Predictor</h1>
+        <p className="auth-hero__sub">Join thousands of fans predicting the tournament</p>
+      </div>
+
+      {/* ── Form card ── */}
+      <div className="auth-card-wrap">
       <div className="auth-card">
 
         {/* Header */}
@@ -142,6 +152,7 @@ function RegisterForm() {
         </p>
 
       </div>
+      </div>  {/* auth-card-wrap */}
     </div>
   );
 }

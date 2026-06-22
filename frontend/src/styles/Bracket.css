@@ -264,12 +264,15 @@
   white-space: nowrap;
 }
 
-/* Grows to fill remaining height and vertically centres the card */
+/* Grows to fill remaining height; stacks card + odds table vertically */
 .champion-col__body {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding-top: 0.5rem;
 }
 
 .champion-card {
@@ -385,4 +388,70 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── Title Odds Table ──────────────────────────────────────────────────────── */
+
+.title-odds {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: 0.78rem;
+}
+
+.title-odds__header {
+  padding: 0.45rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-gold);
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title-odds__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.title-odds__row {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title-odds__row:last-child {
+  border-bottom: none;
+}
+
+.title-odds__row:first-child td {
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.title-odds__flag {
+  width: 2rem;
+  padding: 0.3rem 0.4rem 0.3rem 0.75rem;
+}
+
+.title-odds__flag .fi {
+  font-size: 1rem;
+}
+
+.title-odds__name {
+  padding: 0.3rem 0.25rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 9rem;
+}
+
+.title-odds__pct {
+  padding: 0.3rem 0.75rem 0.3rem 0.25rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  font-weight: 600;
 }

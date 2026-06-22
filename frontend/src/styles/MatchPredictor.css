@@ -1,0 +1,328 @@
+/* ============================================================
+   MatchPredictor.css
+   ============================================================ */
+
+.mp-section {
+  max-width: 680px;
+  margin: 0 auto var(--space-8);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Header ---------- */
+.mp-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-1);
+  text-align: center;
+}
+
+.mp-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0 0 var(--space-5);
+}
+
+/* ---------- Controls ---------- */
+.mp-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.mp-team-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.mp-select {
+  flex: 1;
+  padding: 10px var(--space-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.mp-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.mp-vs {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* ---------- Button ---------- */
+.mp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 11px 36px;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-base), transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.mp-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.mp-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Spinner ---------- */
+.mp-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: mp-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes mp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Error ---------- */
+.mp-error {
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+  text-align: center;
+  margin: var(--space-2) 0 0;
+}
+
+/* ---------- Result card ---------- */
+.mp-result {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.mp-matchup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.mp-matchup-team {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.mp-matchup-sep {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Probability bars ---------- */
+.mp-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mp-bar-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 44px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.mp-bar-label {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-bar-track {
+  height: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.mp-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.mp-bar-pct {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-align: right;
+}
+
+/* ---------- Verdict ---------- */
+.mp-verdict {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.mp-verdict strong {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- Share button ---------- */
+.mp-share-btn {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 9px 22px;
+  background: transparent;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.mp-share-btn:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+  filter: none;
+}
+
+/* ---------- Share card ---------- */
+.mp-share-card {
+  background: linear-gradient(135deg, #0A2E1E 0%, #0F6E56 100%);
+  border-radius: 16px;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: min(400px, 90vw);
+  margin: 0 auto;
+  box-shadow: var(--shadow-md);
+}
+
+.mp-share-card__text {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------- Share actions ---------- */
+.mp-share-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.mp-share-action-btn {
+  flex: 1;
+  max-width: 160px;
+  padding: 9px 14px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.mp-share-action-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.85);
+  filter: none;
+}
+
+.mp-share-action-btn--x {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.mp-share-action-btn--x:hover {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .mp-team-row {
+    flex-direction: column;
+  }
+
+  .mp-select {
+    width: 100%;
+  }
+
+  .mp-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .mp-section {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .mp-bar-row {
+    grid-template-columns: 100px 1fr 40px;
+  }
+
+  .mp-share-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mp-share-action-btn {
+    max-width: 100%;
+  }
+}

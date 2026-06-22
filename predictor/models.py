@@ -21,7 +21,11 @@ class UserPrediction(models.Model):
     user             = models.ForeignKey(User, on_delete=models.CASCADE)
     home_team        = models.CharField(max_length=100, default='')
     away_team        = models.CharField(max_length=100, default='')
-    predicted_result = models.CharField(max_length=20)
+    predicted_result = models.CharField(max_length=50)
+    # Symmetric ensemble probabilities (neutral venue)
+    p_home           = models.FloatField(null=True, blank=True)
+    p_draw           = models.FloatField(null=True, blank=True)
+    p_away           = models.FloatField(null=True, blank=True)
     created_at       = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

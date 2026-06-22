@@ -1,0 +1,189 @@
+/* ============================================================
+   AboutModel.css
+   ============================================================ */
+
+.about-page {
+  min-height: calc(100vh - 60px);
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #0A2E1E 0%, #0F6E56 55%, #1a4a7a 100%);
+  padding: 56px 24px 52px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.about-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: none;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 7px 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  margin-bottom: var(--space-4);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.about-back-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  filter: none;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.about-card {
+  max-width: 740px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;            /* sections handle their own spacing */
+}
+
+/* ── Horizontal rule between sections ────────────────────── */
+.about-rule {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-6) 0;
+}
+
+/* ── Section ─────────────────────────────────────────────── */
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.about-section__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  text-align: left;
+}
+
+.about-section__body {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.about-section__body strong {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ── Accuracy strip ──────────────────────────────────────── */
+.about-accuracy-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
+}
+
+.about-acc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.about-acc-item--highlight .about-acc-value {
+  color: var(--color-primary);
+}
+
+.about-acc-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.about-acc-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+.about-acc-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ── Feature list ────────────────────────────────────────── */
+.about-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.about-feature-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.about-feature-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 40px 16px 36px;
+  }
+
+  .about-card {
+    padding: 0;
+  }
+
+  .about-section__title {
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 520px) {
+  .about-accuracy-strip {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .about-acc-divider {
+    width: 40px;
+    height: 1px;
+  }
+}

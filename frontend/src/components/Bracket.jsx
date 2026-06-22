@@ -71,11 +71,47 @@ function buildPath(champion, knockout) {
   }, []);
 }
 
+// ─── TitleOddsTable ───────────────────────────────────────────────────────────
+
+function TitleOddsTable({ odds }) {
+  const rows = odds.filter((o) => o.probability > 0.02);
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="title-odds">
+      <div className="title-odds__header">Title Odds</div>
+      <table className="title-odds__table">
+        <tbody>
+          {rows.map(({ team, probability }) => {
+            const iso = countryToISO(team);
+            return (
+              <tr key={team} className="title-odds__row">
+                <td className="title-odds__flag">
+                  {iso && <span className={`fi fi-${iso}`} aria-label={team} />}
+                </td>
+                <td className="title-odds__name">{team}</td>
+                <td className="title-odds__pct">{Math.round(probability * 100)}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 // ─── ChampionCard ─────────────────────────────────────────────────────────────
 
-function ChampionCard({ champion, winProbability, knockout }) {
-  const iso  = countryToISO(champion);
-  const path = buildPath(champion, knockout);
+function ChampionCard({ championshipOdds, knockout }) {
+  // Source of truth: whoever won the bracket final.
+  const champion = knockout?.final?.winner;
+  if (!champion) return null;
+
+  const iso       = countryToISO(champion);
+  const path      = buildPath(champion, knockout);
+  // MC probability for this specific champion (may differ from odds[0]).
+  const oddsEntry = (championshipOdds ?? []).find((o) => o.team === champion);
+  const winPct    = oddsEntry ? `${Math.round(oddsEntry.probability * 100)}%` : null;
 
   return (
     <div className="champion-col">
@@ -93,7 +129,7 @@ function ChampionCard({ champion, winProbability, knockout }) {
           <span className="champion-card__name">{champion}</span>
           <span className="champion-card__subtitle">Predicted Champion</span>
 
-          <span className="champion-card__prob">{winProbability} to win</span>
+          {winPct && <span className="champion-card__prob">{winPct} to win</span>}
 
           {path.length > 0 && (
             <>
@@ -110,6 +146,8 @@ function ChampionCard({ champion, winProbability, knockout }) {
             </>
           )}
         </div>
+
+        <TitleOddsTable odds={championshipOdds} />
       </div>
     </div>
   );
@@ -130,13 +168,13 @@ const ROUND_ORDER = ["round_of_32", "round_of_16", "quarter", "semi", "final"];
 /**
  * Bracket
  * Props:
- *   groups        {Array}    — 12 group objects from /api/simulate/
- *   knockout      {Object}   — { round_of_32, round_of_16, quarter, semi, third_place, final }
- *   champion      {string}   — champion team name
- *   winProbability{string}   — e.g. "18%"
- *   onMatchClick  {Function} — called with match object on KnockoutMatch click
+ *   groups            {Array}    — 12 group objects from /api/simulate/
+ *   knockout          {Object}   — { round_of_32, round_of_16, quarter, semi, third_place, final }
+ *   champion          {string}   — champion team name (used only to gate render)
+ *   championshipOdds  {Array}    — [{ team, probability }, ...] from Monte Carlo
+ *   onMatchClick      {Function} — called with match object on KnockoutMatch click
  */
-function Bracket({ groups, knockout, champion, winProbability, onMatchClick }) {
+function Bracket({ groups, knockout, champion, championshipOdds, onMatchClick }) {
   if (!groups || !knockout) return null;
 
   return (
@@ -179,10 +217,9 @@ function Bracket({ groups, knockout, champion, winProbability, onMatchClick }) {
           })}
 
           {/* ── Champion card — 6th column ─────────────────── */}
-          {champion && (
+          {knockout?.final?.winner && (
             <ChampionCard
-              champion={champion}
-              winProbability={winProbability}
+              championshipOdds={championshipOdds}
               knockout={knockout}
             />
           )}

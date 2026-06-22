@@ -1,0 +1,342 @@
+/* ============================================================
+   UserProfile.css
+   ============================================================ */
+
+.up-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Loading / error ─────────────────────────────────────── */
+.up-loading,
+.up-error {
+  text-align: center;
+  padding: var(--space-8);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+}
+.up-error { color: var(--color-danger); }
+
+/* ── Profile card ────────────────────────────────────────── */
+.up-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+.up-avatar {
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.up-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.up-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 2px;
+}
+
+.up-username {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-4);
+}
+
+.up-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3) var(--space-5);
+}
+
+.up-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.up-meta-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.up-meta-value {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.up-meta-value--accent {
+  color: var(--color-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ── History section ─────────────────────────────────────── */
+.up-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.up-history-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.up-empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-5) 0;
+}
+
+/* ── Table ───────────────────────────────────────────────── */
+.up-table-wrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.up-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.up-table thead {
+  background: var(--color-bg);
+}
+
+.up-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.up-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.up-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.up-table tbody tr:hover {
+  background: var(--color-bg);
+}
+
+/* Date cell */
+.up-td-date {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-size: var(--text-xs);
+}
+
+/* Match cell */
+.up-td-match {
+  white-space: nowrap;
+}
+
+.up-team {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.up-vs {
+  display: inline-block;
+  margin: 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Result badge */
+.up-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.up-badge--win {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.up-badge--draw {
+  background: #F3F4F6;
+  color: var(--color-text-muted);
+}
+
+/* Probabilities column */
+.up-th-probs { min-width: 180px; }
+
+.up-probs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.up-prob-row {
+  display: grid;
+  grid-template-columns: 42px 1fr 32px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.up-prob-lbl {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.up-mini-track {
+  height: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.up-mini-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+.up-prob-pct {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-align: right;
+}
+
+.up-prob-na {
+  color: var(--color-text-muted);
+}
+
+/* ── Personal stats (Score vs AI) ───────────────────────── */
+.up-stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.up-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.up-stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.up-stat-card--accent {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.up-stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.up-stat-card--accent .up-stat-value {
+  color: var(--color-primary-dark);
+}
+
+.up-stat-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .up-page {
+    padding: var(--space-4) var(--space-3) var(--space-6);
+  }
+
+  .up-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .up-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .up-meta-grid {
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
+
+  .up-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .up-th-probs,
+  .up-td-probs {
+    display: none;   /* hide prob column on very small screens */
+  }
+}

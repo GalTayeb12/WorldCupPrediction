@@ -1,0 +1,167 @@
+/* ============================================================
+   Navbar.css
+   ============================================================ */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  box-sizing: border-box;
+
+  background: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* ── Logo ────────────────────────────────────────────── */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.navbar-logo:hover {
+  opacity: 0.85;
+  filter: none;   /* override global button brightness */
+}
+
+.navbar-logo__icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.navbar-logo__text {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.navbar-logo__accent {
+  color: #90e0c8;   /* soft mint — visually distinct from the white wordmark */
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ── Centre link (About) ─────────────────────────────── */
+.navbar-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 4px 2px;
+  letter-spacing: 0.03em;
+  transition: color var(--transition-fast);
+  position: relative;
+}
+
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #90e0c8;
+  border-radius: 1px;
+  transition: width var(--transition-base);
+}
+
+.navbar-link:hover {
+  color: #ffffff;
+  filter: none;
+}
+
+.navbar-link:hover::after,
+.navbar-link--active::after {
+  width: 100%;
+}
+
+.navbar-link--active {
+  color: #ffffff;
+}
+
+/* ── Actions ─────────────────────────────────────────── */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.navbar-btn {
+  padding: 7px 18px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.navbar-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.85);
+  filter: none;
+}
+
+.navbar-btn--danger {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar-btn--danger:hover {
+  background: rgba(220, 53, 69, 0.75);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: var(--space-2) var(--space-4);
+    gap: var(--space-2);
+  }
+
+  /* Logo stretches to fill row 1 alongside the About link */
+  .navbar-logo {
+    flex: 1;
+  }
+
+  /* Actions drop to a second row, flush right */
+  .navbar-actions {
+    order: 3;
+    width: 100%;
+    justify-content: flex-end;
+    padding-bottom: var(--space-1);
+  }
+
+  .navbar-btn {
+    padding: 6px 12px;
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo__text {
+    font-size: var(--text-base);
+  }
+}
