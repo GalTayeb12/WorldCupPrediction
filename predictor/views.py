@@ -434,13 +434,16 @@ def simulate_tournament_view(request):
         )
 
     try:
+        logger.info("Starting simulation (n=50)...")
         result, championship_odds = simulate_and_pick(
             _new_model, _new_le, _final_ratings, _new_feature_names,
-            rankings_df, n=200, top_k=7,
+            rankings_df, n=50, top_k=7,
         )
         result['championship_odds'] = championship_odds
+        logger.info("Simulation complete.")
     except Exception as e:
-        return Response({'error': str(e)}, status=500)
+        logger.error("Simulation error:\n%s", traceback.format_exc())
+        return Response({'error': str(e), 'detail': traceback.format_exc()}, status=500)
 
     return Response(result)
 
