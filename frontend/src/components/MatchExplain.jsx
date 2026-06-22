@@ -141,7 +141,7 @@ function FormPills({ form }) {
  *   onClose function
  */
 function MatchExplain({ match, onClose }) {
-  const { home, away, winner, p_home, p_away } = match;
+  const { home, away, winner, p_home } = match;
   const feat = getMockFeatures(home, away);
 
   // Derive 3-way probabilities: subtract small draw pool from both

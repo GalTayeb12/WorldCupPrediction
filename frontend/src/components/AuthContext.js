@@ -19,12 +19,6 @@ export const AuthProvider = ({ children }) => {
 
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
-
-      // אופציונלי: שליפת פרטי המשתמש מהשרת
-      // אם אין נקודת קצה לשליפת פרטי משתמש, אפשר להסיר את זה
-      if (false) { // כרגע מושבת עד שיש API מתאים
-        fetchUserProfile(storedAccessToken);
-      }
     }
 
     if (storedRefreshToken) {
@@ -33,24 +27,6 @@ export const AuthProvider = ({ children }) => {
 
     setLoading(false);
   }, []);
-
-  // פונקציה לשליפת פרטי המשתמש - לא בשימוש כרגע, תוכל להפעיל אם יש API מתאים
-  const fetchUserProfile = async (token) => {
-    try {
-      const response = await axios.get(API_URL + "/api/user/profile/", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setUser(response.data);
-    } catch (error) {
-      console.error('Failed to fetch user profile:', error);
-      // אם קיבלנו 401, ננסה לרענן את הטוקן
-      if (error.response?.status === 401 && refreshToken) {
-        refreshAccessToken();
-      }
-    }
-  };
 
   // פונקציית כניסה למערכת
   const login = async (username, password) => {
@@ -161,6 +137,7 @@ export const AuthProvider = ({ children }) => {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken, refreshToken]);
 
   // הערכים שיהיו זמינים דרך הקונטקסט
