@@ -55,29 +55,46 @@ class _EnsemblePredictor:
         return p
 
 
-# Load bundle — XGBoost from the pkl is replaced by _Stub; real XGB comes from JSON.
-with open(os.path.join(BASE_DIR, 'world_cup_model.pkl'), 'rb') as _f:
-    _bundle = _SafeUnpickler(_f).load()
+# ── Model loading (wrapped so a failure never prevents Django from starting) ──
+_new_model         = None
+_new_le            = None
+_final_ratings     = None
+_new_feature_names = None
+model              = None
+scaler             = None
+label_encoder      = None
+rankings_df        = None
+group_stats_df     = None
+_MODEL_LOAD_ERROR  = None
 
-_xgb_inner = xgb.XGBClassifier()
-_xgb_inner.load_model(os.path.join(BASE_DIR, 'xgb_model.json'))
+try:
+    # Ensemble bundle — XGBoost stub replaced; real XGB loaded from JSON
+    with open(os.path.join(BASE_DIR, 'world_cup_model.pkl'), 'rb') as _f:
+        _bundle = _SafeUnpickler(_f).load()
 
-_new_model         = _EnsemblePredictor(_xgb_inner, _bundle['lgb_model'], _bundle['mlp'], _bundle['scaler'])
-_new_le            = _bundle['le']
-_final_ratings     = _bundle['final_ratings']   # team -> ELO float
-_new_feature_names = _bundle['features']        # ordered list
+    _xgb_inner = xgb.XGBClassifier()
+    _xgb_inner.load_model(os.path.join(BASE_DIR, 'xgb_model.json'))
 
-# Legacy assets (used by save_prediction / preprocess_input)
-model         = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'world_cup_model.pkl'))
-scaler        = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'scaler.pkl'))
-label_encoder = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'label_encoder.pkl'))
+    _new_model         = _EnsemblePredictor(_xgb_inner, _bundle['lgb_model'], _bundle['mlp'], _bundle['scaler'])
+    _new_le            = _bundle['le']
+    _final_ratings     = _bundle['final_ratings']
+    _new_feature_names = _bundle['features']
 
-rankings_df    = pd.read_csv(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'data', 'fifa_ranking.csv'))
-group_stats_df = pd.read_csv(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'data', 'group_stats.csv'))
-rankings_df['rank_date'] = pd.to_datetime(rankings_df['rank_date'])
+    # Legacy assets (used by save_prediction / preprocess_input)
+    model         = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'world_cup_model.pkl'))
+    scaler        = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'scaler.pkl'))
+    label_encoder = joblib.load(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'model', 'label_encoder.pkl'))
 
-# Validate group config against loaded CSVs (warnings only at startup)
-groups_config.validate_groups(group_stats_df, rankings_df, strict=False)
+    rankings_df    = pd.read_csv(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'data', 'fifa_ranking.csv'))
+    group_stats_df = pd.read_csv(os.path.join(BASE_DIR, 'WorldCupPredictor', 'backend', 'data', 'group_stats.csv'))
+    rankings_df['rank_date'] = pd.to_datetime(rankings_df['rank_date'])
+
+    groups_config.validate_groups(group_stats_df, rankings_df, strict=False)
+
+except Exception as _e:
+    import traceback
+    _MODEL_LOAD_ERROR = traceback.format_exc()
+    print(f"[predictor] WARNING: ML model failed to load — predict/simulate disabled.\n{_MODEL_LOAD_ERROR}")
 
 
 # ── New-model helpers ─────────────────────────────────────────────────────────
@@ -193,6 +210,12 @@ def _build_features(team_a_key: str, team_b_key: str) -> dict:
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def predict_result(request):
+    if _new_model is None:
+        return Response(
+            {'error': f'ML model unavailable: {_MODEL_LOAD_ERROR}'},
+            status=503,
+        )
+
     home = (request.data.get('home_team') or '').strip()
     away = (request.data.get('away_team') or '').strip()
 
@@ -364,6 +387,12 @@ def simulate_tournament_view(request):
     bracket whose champion is in the Top-7 by championship probability, and
     returns that bracket together with the true MC championship odds.
     """
+    if _new_model is None:
+        return Response(
+            {'error': f'ML model unavailable: {_MODEL_LOAD_ERROR}'},
+            status=503,
+        )
+
     try:
         result, championship_odds = simulate_and_pick(
             _new_model, _new_le, _final_ratings, _new_feature_names,
