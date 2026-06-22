@@ -422,9 +422,10 @@ def user_profile(request):
 def simulate_tournament_view(request):
     """
     POST /api/simulate/
-    Runs 1,000 full stochastic World Cup simulations, picks a representative
-    bracket whose champion is in the Top-7 by championship probability, and
-    returns that bracket together with the true MC championship odds.
+    Runs 200 full stochastic World Cup simulations (reduced from 1,000 to stay
+    within Render free-tier request timeout), picks a representative bracket
+    whose champion is in the Top-7 by championship probability, and returns
+    that bracket together with the true MC championship odds.
     """
     if _new_model is None:
         return Response(
@@ -435,7 +436,7 @@ def simulate_tournament_view(request):
     try:
         result, championship_odds = simulate_and_pick(
             _new_model, _new_le, _final_ratings, _new_feature_names,
-            rankings_df, n=1_000, top_k=7,
+            rankings_df, n=200, top_k=7,
         )
         result['championship_odds'] = championship_odds
     except Exception as e:
