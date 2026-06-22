@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/AuthForms.css";
 
@@ -19,7 +20,7 @@ function LoginForm({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/login/", {
+      const response = await axios.post(`${API_URL}/api/login/", {
         username,
         password,
       });

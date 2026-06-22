@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 import SimulatorHero from "./SimulatorHero";
 import Bracket from "./Bracket";
 import MatchExplain from "./MatchExplain";
@@ -24,7 +25,7 @@ function OracleScreen() {
     try {
       const token    = localStorage.getItem("access_token");
       const response = await axios.post(
-        "http://localhost:8000/api/simulate/",
+        `${API_URL}/api/simulate/",
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );

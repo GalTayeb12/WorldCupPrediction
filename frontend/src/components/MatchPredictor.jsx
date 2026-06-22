@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 import "../styles/MatchPredictor.css";
 
 // All 48 teams from OFFICIAL_GROUPS, alphabetically sorted
@@ -80,7 +81,7 @@ export default function MatchPredictor() {
     try {
       const token = localStorage.getItem("access_token");
       const { data } = await axios.post(
-        "http://localhost:8000/api/predict/",
+        `${API_URL}/api/predict/",
         { home_team: home, away_team: away },
         { headers: { Authorization: `Bearer ${token}` } },
       );

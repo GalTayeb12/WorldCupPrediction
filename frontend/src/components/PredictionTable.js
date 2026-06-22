@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 
 function PredictionTable({ token, refreshFlag }) {
   const [predictions, setPredictions] = useState([]);
@@ -7,7 +8,7 @@ function PredictionTable({ token, refreshFlag }) {
   useEffect(() => {
     const fetchPredictions = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/my_predictions/", {
+        const response = await axios.get(`${API_URL}/api/my_predictions/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

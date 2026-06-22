@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import "../styles/AuthForms.css";
 
@@ -28,7 +29,7 @@ function RegisterForm() {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/api/register/", {
+      await axios.post(`${API_URL}/api/register/", {
         username,
         password,
         email,

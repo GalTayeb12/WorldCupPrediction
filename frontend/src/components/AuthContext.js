@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../utils/api';
 
 // יצירת הקונטקסט
 const AuthContext = createContext(null);
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   // פונקציה לשליפת פרטי המשתמש - לא בשימוש כרגע, תוכל להפעיל אם יש API מתאים
   const fetchUserProfile = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/api/user/profile/', {
+      const response = await axios.get(`${API_URL}/api/user/profile/', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   // פונקציית כניסה למערכת
   const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
+      const response = await axios.post(`${API_URL}/api/login/', {
         username,
         password
       });
@@ -81,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     if (!refreshToken) return null;
 
     try {
-      const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+      const response = await axios.post(`${API_URL}/api/token/refresh/', {
         refresh: refreshToken
       });
 

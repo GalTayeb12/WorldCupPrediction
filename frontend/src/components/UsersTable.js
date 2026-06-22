@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../utils/api";
 
 function UsersTable({ token }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/users/", {
+      .get(`${API_URL}/api/users/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
