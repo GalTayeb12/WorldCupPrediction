@@ -440,28 +440,14 @@ def simulate_tournament_view(request):
             status=503,
         )
 
-    import signal
-
-    def _timeout_handler(signum, frame):
-        raise TimeoutError("Simulation exceeded time limit")
-
     try:
-        logger.info("Starting simulation (n=20)...")
-        # Set a 25-second hard limit (Render free tier kills at 30s)
-        signal.signal(signal.SIGALRM, _timeout_handler)
-        signal.alarm(25)
-        try:
-            result, championship_odds = simulate_and_pick(
-                _new_model, _new_le, _final_ratings, _new_feature_names,
-                rankings_df, n=20, top_k=5,
-            )
-        finally:
-            signal.alarm(0)   # cancel the alarm regardless of outcome
+        logger.info("Starting simulation (n=1, diagnostic)...")
+        result, championship_odds = simulate_and_pick(
+            _new_model, _new_le, _final_ratings, _new_feature_names,
+            rankings_df, n=1, top_k=1,
+        )
         result['championship_odds'] = championship_odds
         logger.info("Simulation complete.")
-    except TimeoutError:
-        logger.error("Simulation timed out")
-        return Response({'error': 'Simulation timed out — please try again.'}, status=503)
     except Exception as e:
         logger.error("Simulation error:\n%s", traceback.format_exc())
         return Response({'error': str(e), 'detail': traceback.format_exc()}, status=500)
